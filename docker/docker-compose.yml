@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  postgresql:
+    container_name: postgresql
+    build:
+      context: .
+      dockerfile: Dockerfile-postgresql
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresql_db:/var/lib/postgresql:cached
+    networks:
+      - custom_network
+
+  php:
+    container_name: php
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile-php
+    networks:
+      - custom_network
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile-nginx
+    ports:
+      - 80:80
+      - 8001:80
+    networks:
+      - custom_network
+
+volumes:
+  postgresql_db:
+
+networks:
+  custom_network:

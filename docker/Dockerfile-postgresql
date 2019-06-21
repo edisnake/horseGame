@@ -1,0 +1,5 @@
+FROM postgres:10
+
+USER postgres
+RUN echo "host all  all    0.0.0.0/0  md5" >> /var/run/postgresql/.s.PGSQL.5432
+

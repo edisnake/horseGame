@@ -1,0 +1,18 @@
+FROM php:7.2-fpm
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        git \
+        zlib1g-dev \
+        libxml2-dev \
+        libzip-dev \
+        libpq-dev \
+    && docker-php-ext-install \
+        pdo_pgsql \
+        zip \
+    && docker-php-ext-enable pdo_pgsql
+
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+COPY ./ /var/www/horseGame/
+WORKDIR /var/www/horseGame/
+RUN /bin/bash -c 'mkdir /var/www/horseGame/var; chmod -R 777 /var/www/horseGame/var;'
+CMD php bin/console doctrine:database:create && \
+    php bin/console doctrine:migrations:migrate
